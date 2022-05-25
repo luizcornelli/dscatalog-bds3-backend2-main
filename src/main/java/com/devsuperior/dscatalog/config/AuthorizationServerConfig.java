@@ -1,6 +1,7 @@
 package com.devsuperior.dscatalog.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +16,15 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+	
+	@Value("${security.oauth2.client.client-id}")
+	private String clientId;
+	
+	@Value("${security.oauth2.client.client-secret}")
+	private String clientSecret; 
+	
+	@Value("${jwt.duration}")
+	private String jwtDuration; 
 	
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -36,11 +46,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override // definir como vai ser nossa autenticação e quais vão ser os dados do client
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory()
-		.withClient("dscatalog")
-		.secret(bCryptPasswordEncoder.encode("dscatalog123"))
+		.withClient(clientId)
+		.secret(bCryptPasswordEncoder.encode(clientSecret))
 		.scopes("read", "write")
 		.authorizedGrantTypes("password")
-		.accessTokenValiditySeconds(86400); 
+		.accessTokenValiditySeconds(Integer.parseInt(jwtDuration)); 
 	}
 
 	@Override // Quem vai autorizar e qual vai ser o formato do token
