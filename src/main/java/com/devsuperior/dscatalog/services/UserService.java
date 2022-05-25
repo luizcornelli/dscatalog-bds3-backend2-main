@@ -32,7 +32,7 @@ import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 @Service
 public class UserService implements UserDetailsService {
 	
-	Logger logger = LoggerFactory.getLogger(UserService.class);
+	private Logger logger = LoggerFactory.getLogger(UserService.class);
 	
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
